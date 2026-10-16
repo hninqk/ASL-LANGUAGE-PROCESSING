@@ -1,10 +1,8 @@
 from enum import IntEnum
 
-
 class PoseShoulder(IntEnum):
   LEFT_SHOULDER = 11
   RIGHT_SHOULDER = 12
-
 
 class HandLandmark(IntEnum):
   WRIST = 0

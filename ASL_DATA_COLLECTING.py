@@ -2,6 +2,7 @@ import cv2
 import mediapipe as mp
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
+from LANDMARK_HELPER import PoseShoulder, HandLandmark
 
 MODEL_PATH = "holistic_landmarker.task"
 
@@ -21,7 +22,7 @@ with vision.HolisticLandmarker.create_from_options(options) as landmarker:
   while cap.isOpened():
     success, frame = cap.read()
     if not success:
-      print("Ignoring empty camera frame.")
+      print("[CV2] UNSUCCESSFUL")
       break
 
     frame = cv2.flip(frame, 1)
@@ -40,14 +41,14 @@ with vision.HolisticLandmarker.create_from_options(options) as landmarker:
     if result.right_hand_landmarks:
       wrist = result.right_hand_landmarks[0]
       if result.pose_landmarks:
-        anchored_x = wrist.x - right_shoulder.x
-        anchored_y = wrist.y - right_shoulder.y
-        print(
-            f"\rWrist relative to shoulder -> X: {anchored_x:.3f} | Y:"
-            f" {anchored_y:.3f}      ",
-            end="",
-            flush=True,
-        )
+        rx = wrist.x - right_shoulder.x
+        ry = wrist.y - right_shoulder.y
+
+    if result.left_hand_landmarks:
+      wrist = result.left_hand_landmarks[0]
+      if result.pose_landmarks:
+        lx = wrist.x - right_shoulder.x
+        ry = wrist.y - right_shoulder.y
 
     cv2.imshow("HOLISTIC LANDMARKS", frame)
 
